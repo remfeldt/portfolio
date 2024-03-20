@@ -1,0 +1,68 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+    --primary-color: #FF0000;
+    --secondary-color: #FFFF00;
+    --background-color: #000000;
+    background-color: var(--background-color);
+}
+
+h1 {
+    font-size: 5.5rem;
+    color: var(--primary-color)
+}
+
+nav {
+    display: flex;
+}
+
+.title {
+    text-align: center;
+}
+
+.noto-sans-100 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;    
+}
+
+.noto-sans-200 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;    
+}
+
+.noto-sans-400 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;    
+}
+
+.noto-sans-600 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;    
+}
+
+.noto-sans-900 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+    letter-spacing: 0.25rem;
+}
+
+.logo {
+    width: 128px;
+    height: 48px;
+    background-color: darkcyan;
+}
+
+.tabs {
+    background-color:aquamarine;
+    flex-grow: 1;
+}
