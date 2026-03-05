@@ -1,6 +1,10 @@
 import { getPageFromUrl, pageNames } from "./page-routing.js";
-
-export const setupNavigation = (mainContainer, renderPage) => {
+/**
+ * Sets up navigation by intercepting clicks on links with "?page=" and handling browser back/forward buttons.
+ * @param {HTMLElement} mainContainer - The main container where page content will be rendered.
+ * @param {(mainContainer: HTMLElement, pageName: string, options?: { pushHistory: boolean }) => Promise<void>} renderPageContent - The function to call for rendering page content.
+ */
+export const setupNavigation = (mainContainer, renderPageContent) => {
     document.addEventListener("click", (event) => {
         const navLink = event.target.closest('a[href*="?page="]');
         if (!navLink) {
@@ -18,10 +22,10 @@ export const setupNavigation = (mainContainer, renderPage) => {
         }
 
         event.preventDefault();
-        void renderPage(mainContainer, targetPageName, { pushHistory: true });
+        void renderPageContent(mainContainer, targetPageName, { pushHistory: true });
     });
 
     window.addEventListener("popstate", () => {
-        void renderPage(mainContainer, getPageFromUrl(), { pushHistory: false });
+        void renderPageContent(mainContainer, getPageFromUrl(), { pushHistory: false });
     });
 };
