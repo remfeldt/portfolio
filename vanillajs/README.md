@@ -9,7 +9,7 @@ It is all nice and handy, but having worked many years with frameworks, node mod
 - Semantics and Accessibility
 - Fun
 
-The intention of this project is to be worked on iterarively as I learn and improve in which the project will also improve. Therefore I will try and document each iteration in a Project Log, what I wanted to change, what actually changed, what I learned, link references/sources etc. It's important to me that I have fun while doing this, so I may have set up some initial goals but along the way I may feel the urge to add additional content as I'm building. I will log this as well.
+The intention of this project is to be worked on iterarively as I learn and improve in which the project will also improve. Therefore I will try and document each iteration in a ([Project Log](/LOG.md)), what I wanted to change, what actually changed, what I learned, link references/sources etc. It's important to me that I have fun while doing this, so I may have set up some initial goals but along the way I may feel the urge to add additional content as I'm building. I will log this as well.
 
 I work in VS Code with the Live Server extension, git and github cli in the terminal. Keeping this project nice and small I will have everything happen clientside but I will look into building a server at a later time, to test and play with server side rendering, auth, db integrations and more. 
 
