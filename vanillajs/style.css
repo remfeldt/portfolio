@@ -1,0 +1,54 @@
+html{
+    font-family: 'Oxygen', sans-serif;
+    background-color: bisque;
+    color: darkslategray;
+}
+html, body {
+    margin: 0;
+    padding: 0;    
+}
+
+h1 {
+    font-size: 3em;
+    text-align: center;
+    margin-top: 0.5em;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-bottom: 2em;
+    background-color: darkslategray;
+}
+
+header a {
+    color: bisque;
+    text-decoration: none;
+    font-size: .75rem;
+    padding: 1rem;
+}
+
+header a:hover {
+    color: beige;
+    text-decoration-line: underline;
+    text-decoration-color: bisque;
+    text-decoration-thickness: 1px;
+    text-decoration-style: solid;
+    text-underline-offset: 4px;
+}
+
+.nav-header {
+    display: flex;
+    flex-direction: row;
+    text-transform: uppercase;
+    padding: 8px;
+}
+
+.nav-header li {
+    border-right: 1px solid bisque;
+}
+
+.nav-header li:last-child {
+    border-right: none;
+}
