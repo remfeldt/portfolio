@@ -22,5 +22,14 @@ Setting up a simple SPA with a header, a few pages and injecting a main element 
 ### AI/Copilot co-authoring disclosure
 - GitHub Copilot was used as a coding assistant for refactoring ideas, naming consistency, and documentation drafting.
 - Suggestions were reviewed and adjusted before being kept.
-- Final implementation and architecture decisions were made by the project me.
+- Final implementation were made by the project me.
+
+### Safety and error logging pass
+Added a final safety-oriented pass to improve error visibility and make function behavior easier to diagnose.
+
+- Added a shared logger utility with standardized prefix and log helpers (`logInfo`, `logWarning`, `logError`).
+- Added defensive logging in bootstrap flow, navigation handlers, routing validation, rendering, and template prefetch paths.
+- Added guarded handling for unexpected failures in history updates and async render/prefetch execution.
+- Added JSDoc function comments for all logger functions.
+- This safety/error-logging pass was co-authored with GitHub Copilot.
 

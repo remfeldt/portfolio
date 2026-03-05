@@ -1,4 +1,5 @@
 import { getPageFromUrl, getValidPageName, pageNames } from "./page-routing.js";
+import { logError, logWarning } from "./logger.js";
 
 const templateCache = new Map();
 const inFlightRequests = new Map();
@@ -32,7 +33,7 @@ const fetchPageTemplate = (pageName) => {
             return htmlTemplate;
         })
         .catch((error) => {
-            console.error(error);
+            logError("Template fetch failed.", { pageName: validPageName, error });
             return "<p>Sorry, this section is unavailable right now.</p>";
         })
         .finally(() => {
@@ -51,17 +52,37 @@ const fetchPageTemplate = (pageName) => {
  * @param {boolean} options.pushHistory - Whether to push the page to the browser history.
  */
 export const renderPageContent = async (mainContainer, pageName, options = { pushHistory: true }) => {
+    if (!mainContainer) {
+        logError("Render skipped because main container is missing.");
+        return;
+    }
+
     const validPageName = getValidPageName(pageName);
 
     if (!templateCache.has(validPageName)) {
         mainContainer.innerHTML = "<p>Loading...</p>";
     }
 
-    const htmlTemplate = await fetchPageTemplate(validPageName);
-    mainContainer.innerHTML = htmlTemplate;
+    try {
+        const htmlTemplate = await fetchPageTemplate(validPageName);
+        mainContainer.innerHTML = htmlTemplate;
+    } catch (error) {
+        logError("Unexpected error while rendering page content.", {
+            pageName: validPageName,
+            error
+        });
+        mainContainer.innerHTML = "<p>Sorry, this section is unavailable right now.</p>";
+    }
 
     if (options.pushHistory) {
-        window.history.pushState({ page: validPageName }, "", `?page=${validPageName}`);
+        try {
+            window.history.pushState({ page: validPageName }, "", `?page=${validPageName}`);
+        } catch (error) {
+            logError("Failed to update browser history state.", {
+                pageName: validPageName,
+                error
+            });
+        }
     }
 };
 
@@ -72,13 +93,22 @@ export const prefetchPageTemplates = () => {
     const currentPage = getPageFromUrl();
     const pagesToPrefetch = pageNames.filter((pageName) => pageName !== currentPage);
     const runPrefetch = () => {
-        pagesToPrefetch.forEach((pageName) => {
-            void fetchPageTemplate(pageName);
-        });
+        try {
+            pagesToPrefetch.forEach((pageName) => {
+                void fetchPageTemplate(pageName);
+            });
+        } catch (error) {
+            logError("Unexpected error during template prefetch loop.", error);
+        }
     };
 
     if ("requestIdleCallback" in window) {
-        window.requestIdleCallback(runPrefetch);
+        try {
+            window.requestIdleCallback(runPrefetch);
+        } catch (error) {
+            logWarning("requestIdleCallback failed. Falling back to setTimeout prefetch.", error);
+            window.setTimeout(runPrefetch, 0);
+        }
     } else {
         window.setTimeout(runPrefetch, 0);
     }

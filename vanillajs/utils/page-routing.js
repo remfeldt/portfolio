@@ -1,3 +1,5 @@
+import { logWarning } from "./logger.js";
+
 /**
  * An array of valid page names.
  */
@@ -9,6 +11,10 @@ export const pageNames = ["home", "projects", "about", "contact"];
  * @returns {string} The valid page name.
  */
 export const getValidPageName = (pageName) => {
+    if (pageName && !pageNames.includes(pageName)) {
+        logWarning("Invalid page name in URL. Falling back to home.", { pageName });
+    }
+
     return pageNames.includes(pageName) ? pageName : "home";
 };
 
