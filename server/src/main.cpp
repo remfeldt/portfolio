@@ -35,7 +35,12 @@ int main() {
     // 5. Accept loop
     while (true) {
         int addrlen = sizeof(address);
-        int client_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen);
+
+        int client_socket = accept(
+            server_fd,
+            (struct sockaddr*)&address,
+            (socklen_t*)&addrlen
+        );
 
         if (client_socket < 0) {
             perror("accept failed");
@@ -44,7 +49,25 @@ int main() {
 
         std::cout << "Client connected!" << std::endl;
 
-        // Close immediately (we'll handle data in next phase)
+        // Buffer for incoming data
+        char buffer[4096] = {0};
+
+        // Receive data
+        ssize_t bytes_received = recv(
+            client_socket,
+            buffer,
+            sizeof(buffer) - 1,
+            0
+        );
+
+        if (bytes_received < 0) {
+            perror("recv failed");
+        } else {
+            std::cout << "\n===== REQUEST START =====\n";
+            std::cout << buffer << std::endl;
+            std::cout << "===== REQUEST END =====\n";
+        }
+
         close(client_socket);
     }
 
