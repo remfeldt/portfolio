@@ -1,4 +1,4 @@
-I'm ready to begin
+*I'm ready to begin*
 
 Perfect — let’s start properly, at the level you asked for.
 
@@ -269,10 +269,10 @@ But:
 
 You are done when:
 
-- [ ]  Server compiles
-- [ ]  Runs without crashing
-- [ ]  Accepts connections
-- [ ]  Logs “Client connected!”
+- [X]  Server compiles
+- [X]  Runs without crashing
+- [X]  Accepts connections
+- [X]  Logs “Client connected!”
 
 ---
 
@@ -298,6 +298,18 @@ Tell me:
 - Did `nc` connect successfully?
 
 If anything behaved unexpectedly, we debug it at the syscall level.
+
+*I succesfully compiled, ran the server and recieved client connected when ysing nc localhost 8000, lets move to phase 2*
+
+Excellent. That means:
+
+socket creation worked
+bind worked
+listen queue worked
+TCP handshake completed
+accept() returned successfully
+
+You now have a real network server.
 
 ## Relevant Learning Material
 [[C++ Concepts for Beginners - Pointers and More]]
