@@ -49,10 +49,9 @@ int main() {
 
         std::cout << "Client connected!" << std::endl;
 
-        // Buffer for incoming data
+        // Receive request
         char buffer[4096] = {0};
 
-        // Receive data
         ssize_t bytes_received = recv(
             client_socket,
             buffer,
@@ -62,11 +61,31 @@ int main() {
 
         if (bytes_received < 0) {
             perror("recv failed");
-        } else {
-            std::cout << "\n===== REQUEST START =====\n";
-            std::cout << buffer << std::endl;
-            std::cout << "===== REQUEST END =====\n";
+            close(client_socket);
+            continue;
         }
+
+        std::cout << "\n===== REQUEST =====\n";
+        std::cout << buffer << std::endl;
+
+        // HTTP response body
+        std::string body = "Hello from your C++ server!";
+
+        // Construct full HTTP response
+        std::string response =
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: text/plain\r\n"
+            "Content-Length: " + std::to_string(body.size()) + "\r\n"
+            "\r\n" +
+            body;
+
+        // Send response
+        send(
+            client_socket,
+            response.c_str(),
+            response.size(),
+            0
+        );
 
         close(client_socket);
     }
