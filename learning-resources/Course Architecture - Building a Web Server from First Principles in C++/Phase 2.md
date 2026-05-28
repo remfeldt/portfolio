@@ -1,4 +1,4 @@
-# 🎓 Phase 2 — Reading Data from the Client
+ # 🎓 Phase 2 — Reading Data from the Client
 
 > Goal:
 > Understand exactly what a client/browser sends over TCP.
@@ -395,9 +395,9 @@ Eventually becomes:
 
 You are done when:
 
-* [ ] `recv()` successfully reads request
-* [ ] Browser request prints correctly
-* [ ] You understand:
+* [X] `recv()` successfully reads request
+* [X] Browser request prints correctly
+* [X] You understand:
 
   * TCP stream behavior
   * HTTP is plain text
@@ -425,3 +425,13 @@ Proceed once:
 
 * you tested browser request output
 * and saw raw HTTP headers successfully.
+
+*Okay everything works, also tested with curl. Now I would like to move to phase 3*
+
+Excellent.
+Once you see raw browser requests in your terminal, you’ve crossed an important boundary:
+
+Your program is no longer “just a TCP server”
+It is now participating in the HTTP protocol.
+
+Now we make the browser happy.
