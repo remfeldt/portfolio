@@ -1,13 +1,3 @@
-Excellent.
-Once you see raw browser requests in your terminal, you’ve crossed an important boundary:
-
-> Your program is no longer “just a TCP server”
-> It is now participating in the HTTP protocol.
-
-Now we make the browser happy.
-
----
-
 # 🎓 Phase 3 — Sending a Valid HTTP Response
 
 > Goal:
