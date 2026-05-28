@@ -3,10 +3,14 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cstring>
+#include <fstream>
+#include <sstream>
 
 int main() {
+
     // 1. Create socket
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+
     if (server_fd == -1) {
         perror("socket failed");
         return 1;
@@ -14,9 +18,10 @@ int main() {
 
     // 2. Define address
     sockaddr_in address;
-    address.sin_family = AF_INET;          // IPv4
-    address.sin_addr.s_addr = INADDR_ANY;  // Accept any IP
-    address.sin_port = htons(8080);        // Port 8080
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(8080);
 
     // 3. Bind socket
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
@@ -32,8 +37,9 @@ int main() {
 
     std::cout << "Server listening on port 8080..." << std::endl;
 
-    // 5. Accept loop
+    // 5. Main accept loop
     while (true) {
+
         int addrlen = sizeof(address);
 
         int client_socket = accept(
@@ -49,7 +55,10 @@ int main() {
 
         std::cout << "Client connected!" << std::endl;
 
-        // Receive request
+        // =========================================
+        // RECEIVE REQUEST
+        // =========================================
+
         char buffer[4096] = {0};
 
         ssize_t bytes_received = recv(
@@ -68,18 +77,91 @@ int main() {
         std::cout << "\n===== REQUEST =====\n";
         std::cout << buffer << std::endl;
 
-        // HTTP response body
-        std::string body = "Hello from your C++ server!";
+        // =========================================
+        // PARSE HTTP REQUEST LINE
+        // =========================================
 
-        // Construct full HTTP response
+        std::istringstream request_stream(buffer);
+
+        std::string method;
+        std::string path;
+        std::string version;
+
+        request_stream >> method >> path >> version;
+
+        std::cout << "Method: " << method << std::endl;
+        std::cout << "Path: " << path << std::endl;
+        std::cout << "Version: " << version << std::endl;
+
+        // =========================================
+        // MAP URL TO FILE
+        // =========================================
+
+        std::string file_path;
+
+        if (path == "/") {
+            file_path = "index.html";
+        }
+        else {
+            file_path = "." + path;
+        }
+
+        std::cout << "Serving file: " << file_path << std::endl;
+
+        // =========================================
+        // OPEN FILE
+        // =========================================
+
+        std::ifstream file(file_path);
+
+        // 404 HANDLING
+        if (!file.is_open()) {
+
+            std::string not_found_body = "404 Not Found";
+
+            std::string not_found_response =
+                "HTTP/1.1 404 Not Found\r\n"
+                "Content-Type: text/plain\r\n"
+                "Content-Length: " + std::to_string(not_found_body.size()) + "\r\n"
+                "\r\n" +
+                not_found_body;
+
+            send(
+                client_socket,
+                not_found_response.c_str(),
+                not_found_response.size(),
+                0
+            );
+
+            close(client_socket);
+            continue;
+        }
+
+        // =========================================
+        // READ FILE CONTENTS
+        // =========================================
+
+        std::stringstream file_buffer;
+
+        file_buffer << file.rdbuf();
+
+        std::string body = file_buffer.str();
+
+        // =========================================
+        // BUILD HTTP RESPONSE
+        // =========================================
+
         std::string response =
             "HTTP/1.1 200 OK\r\n"
-            "Content-Type: text/plain\r\n"
+            "Content-Type: text/html\r\n"
             "Content-Length: " + std::to_string(body.size()) + "\r\n"
             "\r\n" +
             body;
 
-        // Send response
+        // =========================================
+        // SEND RESPONSE
+        // =========================================
+
         send(
             client_socket,
             response.c_str(),
@@ -87,9 +169,14 @@ int main() {
             0
         );
 
+        // =========================================
+        // CLOSE CLIENT CONNECTION
+        // =========================================
+
         close(client_socket);
     }
 
     close(server_fd);
+
     return 0;
 }
