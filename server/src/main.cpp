@@ -6,6 +6,31 @@
 #include <fstream>
 #include <sstream>
 
+std::string getMimeType(const std::string& path) {
+
+    if (path.ends_with(".html")) {
+        return "text/html";
+    }
+
+    if (path.ends_with(".css")) {
+        return "text/css";
+    }
+
+    if (path.ends_with(".js")) {
+        return "application/javascript";
+    }
+
+    if (path.ends_with(".png")) {
+        return "image/png";
+    }
+
+    if (path.ends_with(".jpg") || path.ends_with(".jpeg")) {
+        return "image/jpeg";
+    }
+
+    return "text/plain";
+}
+
 int main() {
 
     // 1. Create socket
@@ -151,9 +176,11 @@ int main() {
         // BUILD HTTP RESPONSE
         // =========================================
 
+        std::string mime_type = getMimeType(file_path);
+
         std::string response =
             "HTTP/1.1 200 OK\r\n"
-            "Content-Type: text/html\r\n"
+            "Content-Type: " + mime_type + "\r\n"
             "Content-Length: " + std::to_string(body.size()) + "\r\n"
             "\r\n" +
             body;

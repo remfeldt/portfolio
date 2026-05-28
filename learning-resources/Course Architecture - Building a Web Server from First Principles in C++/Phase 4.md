@@ -1,26 +1,3 @@
-Excellent — using Wireshark here is *exactly* the kind of systems-level validation that makes this knowledge stick deeply.
-
-You’re now observing:
-
-* TCP packets
-* HTTP payloads
-* connection teardown
-* protocol structure
-
-That’s how network engineers debug real systems.
-
-And yes — going forward, I’ll continue suggesting:
-
-* `curl`
-* Wireshark
-* `nc`
-* browser devtools
-* potentially `lsof`, `netstat`, `tcpdump`
-
-…but only when they meaningfully expose what the current phase is teaching.
-
----
-
 # 🎓 Phase 4 — Serving Real Files
 
 > Goal:
@@ -935,3 +912,16 @@ We’ll implement:
 At that point:
 
 > you can host a legitimate static portfolio site.
+
+*Lets move to phase 5*
+
+Excellent.
+This is the phase where your server stops being:
+
+“an HTML responder”
+
+and starts becoming:
+
+“an actual static asset server.”
+
+This is also the phase most directly connected to your portfolio goal.

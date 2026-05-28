@@ -1,4 +1,4 @@
- # 🎓 Phase 2 — Reading Data from the Client
+# 🎓 Phase 2 — Reading Data from the Client
 
 > Goal:
 > Understand exactly what a client/browser sends over TCP.
