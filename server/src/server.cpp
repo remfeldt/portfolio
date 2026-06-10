@@ -8,29 +8,20 @@
 #include "request.h"
 #include "response.h"
 
-std::string Server::getMimeType(const std::string& path) {
-
-    if (path.ends_with(".html")) {
-        return "text/html";
-    }
-
-    if (path.ends_with(".css")) {
-        return "text/css";
-    }
-
-    if (path.ends_with(".js")) {
-        return "application/javascript";
-    }
-
-    if (path.ends_with(".png")) {
-        return "image/png";
-    }
-
-    if (path.ends_with(".jpg") || path.ends_with(".jpeg")) {
-        return "image/jpeg";
-    }
-
-    return "text/plain";
+Server::Server(int port)
+{
+    this->port = port;
+    
+    routes["/status"] =
+        [this](int client_socket)
+        {
+            handleStatus(client_socket);
+        };
+    routes["/hello"] =
+    [this](int client_socket)
+    {
+        handleHello(client_socket);
+    };
 }
 
 void Server::handleClient(
@@ -109,14 +100,47 @@ void Server::handleStatus(
     );
 }
 
+void Server::handleHello(
+    int client_socket
+)
+{
+    Response response;
+
+    response.body =
+        "Hello from route system!";
+
+    response.setHeader(
+        "Content-Type",
+        "text/plain"
+    );
+
+    response.setHeader(
+        "Content-Length",
+        std::to_string(response.body.size())
+    );
+
+    std::string responseText =
+        response.toString();
+
+    send(
+        client_socket,
+        responseText.c_str(),
+        responseText.size(),
+        0
+    );
+}
+
 void Server::routeRequest(
     int client_socket,
     const Request& request
 )
 {
-    if (request.path == "/status")
+    auto route =
+    routes.find(request.path);
+
+    if (route != routes.end())
     {
-        handleStatus(client_socket);
+        route->second(client_socket);
         return;
     }
 
@@ -228,10 +252,7 @@ void Server::serveFile(
     );
 }
 
-Server::Server(int port)
-{
-    this->port = port;
-}
+
 
 void Server::start()
 {
@@ -298,6 +319,30 @@ void Server::start()
 
     close(server_fd);
 
-    return;
-    
+    return;    
+}
+
+std::string Server::getMimeType(const std::string& path) {
+
+    if (path.ends_with(".html")) {
+        return "text/html";
+    }
+
+    if (path.ends_with(".css")) {
+        return "text/css";
+    }
+
+    if (path.ends_with(".js")) {
+        return "application/javascript";
+    }
+
+    if (path.ends_with(".png")) {
+        return "image/png";
+    }
+
+    if (path.ends_with(".jpg") || path.ends_with(".jpeg")) {
+        return "image/jpeg";
+    }
+
+    return "text/plain";
 }

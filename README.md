@@ -24,7 +24,7 @@ Important folders:
 	- This is the main implementation target for the tutorial phases.
 - `learning-resources/`
 	- Course architecture and phased notes used to drive development.
-	- Includes the initial prompt, Phase 0-8 writeups, and supporting reference material.
+	- Includes the initial prompt, Phase 0-11 writeups, and supporting reference material.
 - `vanillajs/`
 	- Frontend portfolio prototype built with plain HTML, CSS, and JavaScript.
 	- Intended to be served by the custom C++ server as the project matures.
@@ -39,10 +39,10 @@ Important folders:
 
 ## Phase Progress (Current)
 
-After Phase 10 completion, the project is approaching 65-70% toward the reference end state.
+After Phase 11 completion, the project is around 70% toward the reference end state.
 
 ```txt
-[#############-------] 65%
+[##############------] 70%
 ```
 
 ### Completion Status
@@ -58,7 +58,9 @@ Server Decomposition          ✅ 100%
 
 Routing Layer                 ✅ 100% (Phase 10)
 Request Dispatching           ✅ 100% (Phase 10)
-Repository Structure Match    ⏳ 50%
+Route Table Architecture      ✅ 100% (Phase 11)
+Repository Structure Match    ⏳ 60%
+Response Helpers              ⏳ 0% (Phase 12)
 Polish & Refinement           ⏳ 0%
 
 ### Phase Summary
@@ -66,8 +68,9 @@ Polish & Refinement           ⏳ 0%
 - **Phase 1–8:** Core networking and HTTP protocol implementation
 - **Phase 9:** Server decomposition into cohesive methods (`handleClient()`, `serveFile()`, `getMimeType()`)
 - **Phase 10:** Routing and request dispatch — introducing request-based handlers, dynamic endpoints, and request-processing pipeline
-- **Phase 11+:** Polish, utility extraction, and final repository convergence
+- **Phase 11:** Route table architecture (`std::unordered_map<std::string, std::function<void(int)>>`) for scalable handler registration
+- **Phase 12+:** Response helpers, utility extraction, and final repository convergence
 
 ## Current Status
 
-The server now supports dynamic routing with request-based dispatching. The architecture has evolved from a pure file server into a mini web framework capable of handling both static file serving and dynamic endpoint handlers. The foundation is solid and extensible; remaining work involves matching the final repository structure, adding utility helpers, and final polish.
+The server now supports table-driven routing with registered handlers, moving beyond conditional route checks to a scalable dispatch architecture. The project has evolved from a pure static file server into a mini web framework that can serve both files and dynamic endpoints. Remaining work focuses on response helper utilities, repository alignment, and final polish.
