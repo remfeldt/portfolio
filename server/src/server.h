@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
+#include <functional>
 
 class Request;
 
@@ -17,6 +19,11 @@ private:
     int port;
     int server_fd;
 
+    std::unordered_map<
+        std::string,
+        std::function<void(int)>
+    > routes;
+
     void handleClient(int client_socket);
 
     void routeRequest(
@@ -25,6 +32,10 @@ private:
     );
 
     void handleStatus(
+        int client_socket
+    );
+
+    void handleHello(
         int client_socket
     );
 
