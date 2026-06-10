@@ -5,6 +5,7 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
+#include "request.h"
 
 std::string getMimeType(const std::string& path) {
 
@@ -106,17 +107,15 @@ int main() {
         // PARSE HTTP REQUEST LINE
         // =========================================
 
-        std::istringstream request_stream(buffer);
+        Request request(buffer);
 
-        std::string method;
-        std::string path;
-        std::string version;
+        std::cout << "Method: " << request.method << std::endl;
+        std::cout << "Path: " << request.path << std::endl;
+        std::cout << "Version: " << request.version << std::endl;
 
-        request_stream >> method >> path >> version;
-
-        std::cout << "Method: " << method << std::endl;
-        std::cout << "Path: " << path << std::endl;
-        std::cout << "Version: " << version << std::endl;
+        for (const auto& header : request.headers) {
+            std::cout << header.first << ": " << header.second << std::endl;
+        }
 
         // =========================================
         // MAP URL TO FILE
@@ -124,11 +123,11 @@ int main() {
 
         std::string file_path;
 
-        if (path == "/") {
+        if (request.path == "/") {
             file_path = "index.html";
         }
         else {
-            file_path = "." + path;
+            file_path = "." + request.path;
         }
 
         std::cout << "Serving file: " << file_path << std::endl;
