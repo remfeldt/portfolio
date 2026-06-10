@@ -1021,3 +1021,5 @@ You would already understand enough to explain:
 which is honestly farther than many web developers ever go.
 
 The remaining phases are about transforming that knowledge into a cleaner, more reusable server architecture that increasingly resembles the repository's final design.
+
+*Lets move to the next phase*

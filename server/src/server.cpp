@@ -8,7 +8,7 @@
 #include "request.h"
 #include "response.h"
 
-std::string getMimeType(const std::string& path) {
+std::string Server::getMimeType(const std::string& path) {
 
     if (path.ends_with(".html")) {
         return "text/html";
@@ -33,6 +33,155 @@ std::string getMimeType(const std::string& path) {
     return "text/plain";
 }
 
+void Server::handleClient(
+    int client_socket
+)
+{
+    // =========================================
+    // RECEIVE REQUEST
+    // =========================================
+
+    char buffer[4096] = {0};
+
+    ssize_t bytes_received = recv(
+        client_socket,
+        buffer,
+        sizeof(buffer) - 1,
+        0
+    );
+
+    if (bytes_received < 0) {
+        perror("recv failed");
+        close(client_socket);
+        return;
+    }
+
+    std::cout << "\n===== REQUEST =====\n";
+    std::cout << buffer << std::endl;
+
+    // =========================================
+    // PARSE HTTP REQUEST LINE
+    // =========================================
+
+    Request request(buffer);
+
+    std::cout << "Method: " << request.method << std::endl;
+    std::cout << "Path: " << request.path << std::endl;
+    std::cout << "Version: " << request.version << std::endl;
+
+    for (const auto& header : request.headers) {
+        std::cout << header.first << ": " << header.second << std::endl;
+    }
+
+    serveFile(
+        client_socket,
+        request.path
+    );      
+
+}
+
+void Server::serveFile(
+    int client_socket,
+    const std::string& path
+)
+{
+    // =========================================
+    // MAP URL TO FILE
+    // =========================================
+
+    std::string file_path;
+
+    if (path == "/") {
+        file_path = "index.html";
+    }
+    else {
+        file_path = "." + path;
+    }
+
+    std::cout << "Serving file: " << file_path << std::endl;
+
+    // =========================================
+    // OPEN FILE
+    // =========================================
+
+    std::ifstream file(file_path);
+
+    // 404 HANDLING
+    if (!file.is_open()) {
+        
+        Response response;
+
+        response.statusCode = 404;
+        response.statusText = "Not Found";
+
+        response.body = "404 Not Found";
+
+        response.setHeader(
+            "Content-Type",
+            "text/plain"
+        );
+
+        response.setHeader(
+            "Content-Length",
+            std::to_string(response.body.size())
+        );
+
+        std::string responseText = response.toString();
+
+        send(
+            client_socket,
+            responseText.c_str(),
+            responseText.size(),
+            0
+        );
+
+        return;
+    }
+
+    // =========================================
+    // READ FILE CONTENTS
+    // =========================================
+
+    std::stringstream file_buffer;
+
+    file_buffer << file.rdbuf();
+
+    std::string body = file_buffer.str();
+
+    // =========================================
+    // BUILD HTTP RESPONSE
+    // =========================================
+
+    std::string mime_type = getMimeType(file_path);
+    
+    Response response;
+
+    response.body = body;
+
+    response.setHeader(
+        "Content-Type",
+        mime_type
+    );
+
+    response.setHeader(
+        "Content-Length",
+        std::to_string(body.size())
+    );
+
+    std::string responseText =
+        response.toString();
+    // =========================================
+    // SEND RESPONSE
+    // =========================================
+
+    send(
+        client_socket,
+        responseText.c_str(),
+        responseText.size(),
+        0
+    );
+}
+
 Server::Server(int port)
 {
     this->port = port;
@@ -41,7 +190,7 @@ Server::Server(int port)
 void Server::start()
 {
     // 1. Create socket
-    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (server_fd == -1) {
         perror("socket failed");
@@ -76,12 +225,12 @@ void Server::start()
     // 5. Main accept loop
     while (true) {
 
-        int addrlen = sizeof(address);
+        socklen_t addrlen = sizeof(address);
 
         int client_socket = accept(
             server_fd,
             (struct sockaddr*)&address,
-            (socklen_t*)&addrlen
+            &addrlen
         );
 
         if (client_socket < 0) {
@@ -91,137 +240,14 @@ void Server::start()
 
         std::cout << "Client connected!" << std::endl;
 
-        // =========================================
-        // RECEIVE REQUEST
-        // =========================================
-
-        char buffer[4096] = {0};
-
-        ssize_t bytes_received = recv(
-            client_socket,
-            buffer,
-            sizeof(buffer) - 1,
-            0
-        );
-
-        if (bytes_received < 0) {
-            perror("recv failed");
-            close(client_socket);
-            continue;
-        }
-
-        std::cout << "\n===== REQUEST =====\n";
-        std::cout << buffer << std::endl;
-
-        // =========================================
-        // PARSE HTTP REQUEST LINE
-        // =========================================
-
-        Request request(buffer);
-
-        std::cout << "Method: " << request.method << std::endl;
-        std::cout << "Path: " << request.path << std::endl;
-        std::cout << "Version: " << request.version << std::endl;
-
-        for (const auto& header : request.headers) {
-            std::cout << header.first << ": " << header.second << std::endl;
-        }
-
-        // =========================================
-        // MAP URL TO FILE
-        // =========================================
-
-        std::string file_path;
-
-        if (request.path == "/") {
-            file_path = "index.html";
-        }
-        else {
-            file_path = "." + request.path;
-        }
-
-        std::cout << "Serving file: " << file_path << std::endl;
-
-        // =========================================
-        // OPEN FILE
-        // =========================================
-
-        std::ifstream file(file_path);
-
-        // 404 HANDLING
-        if (!file.is_open()) {
-
-            std::string not_found_body = "404 Not Found";
-
-            Response response;
-
-            response.statusCode = 404;
-            response.statusText = "Not Found";
-
-            response.body = "404 Not Found";
-
-            response.setHeader(
-                "Content-Type",
-                "text/plain"
-            );
-
-            response.setHeader(
-                "Content-Length",
-                std::to_string(response.body.size())
-            );
-
-            std::string responseText = response.toString();
-
-            send(
-                client_socket,
-                responseText.c_str(),
-                responseText.size(),
-                0
-            );
-
-            close(client_socket);
-            continue;
-        }
-
-        // =========================================
-        // READ FILE CONTENTS
-        // =========================================
-
-        std::stringstream file_buffer;
-
-        file_buffer << file.rdbuf();
-
-        std::string body = file_buffer.str();
-
-        // =========================================
-        // BUILD HTTP RESPONSE
-        // =========================================
-
-        std::string mime_type = getMimeType(file_path);
-
-        std::string response =
-            "HTTP/1.1 200 OK\r\n"
-            "Content-Type: " + mime_type + "\r\n"
-            "Content-Length: " + std::to_string(body.size()) + "\r\n"
-            "\r\n" +
-            body;
-
-        // =========================================
-        // SEND RESPONSE
-        // =========================================
-
-        send(
-            client_socket,
-            response.c_str(),
-            response.size(),
-            0
-        );
+        handleClient(client_socket);
 
         // =========================================
         // CLOSE CLIENT CONNECTION
         // =========================================
 
         close(client_socket);
+          
     }
 
     close(server_fd);
