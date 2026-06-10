@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include "request.h"
+#include "response.h"
 
 std::string getMimeType(const std::string& path) {
 
@@ -143,17 +144,29 @@ int main() {
 
             std::string not_found_body = "404 Not Found";
 
-            std::string not_found_response =
-                "HTTP/1.1 404 Not Found\r\n"
-                "Content-Type: text/plain\r\n"
-                "Content-Length: " + std::to_string(not_found_body.size()) + "\r\n"
-                "\r\n" +
-                not_found_body;
+            Response response;
+
+            response.statusCode = 404;
+            response.statusText = "Not Found";
+
+            response.body = "404 Not Found";
+
+            response.setHeader(
+                "Content-Type",
+                "text/plain"
+            );
+
+            response.setHeader(
+                "Content-Length",
+                std::to_string(response.body.size())
+            );
+
+            std::string responseText = response.toString();
 
             send(
                 client_socket,
-                not_found_response.c_str(),
-                not_found_response.size(),
+                responseText.c_str(),
+                responseText.size(),
                 0
             );
 
