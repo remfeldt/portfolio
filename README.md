@@ -39,23 +39,35 @@ Important folders:
 
 ## Phase Progress (Current)
 
-Based on the Phase 9 checkpoint, the project is around halfway to the reference end state.
+After Phase 10 completion, the project is approaching 65-70% toward the reference end state.
 
 ```txt
-[############--------]
-60%
+[#############-------] 65%
 ```
 
-Short phase list:
+### Completion Status
 
-1. Foundations and TCP socket basics
-2. Receiving and sending HTTP over raw sockets
-3. Static file serving and MIME handling
-4. Request abstraction (`Request` parser layer)
-5. Response abstraction (`Response` serializer layer)
-6. Server abstraction (`Server` class)
-7. Next: server decomposition, routing, utility cleanup, and repo convergence
+Foundation & Networking       ✅ 100%
+HTTP Protocol Basics          ✅ 100%
+Request Parsing               ✅ 100%
+Response Generation           ✅ 100%
+Static File Serving           ✅ 100%
+MIME Handling                 ✅ 100%
+Server Abstraction            ✅ 100%
+Server Decomposition          ✅ 100%
+
+Routing Layer                 ✅ 100% (Phase 10)
+Request Dispatching           ✅ 100% (Phase 10)
+Repository Structure Match    ⏳ 50%
+Polish & Refinement           ⏳ 0%
+
+### Phase Summary
+
+- **Phase 1–8:** Core networking and HTTP protocol implementation
+- **Phase 9:** Server decomposition into cohesive methods (`handleClient()`, `serveFile()`, `getMimeType()`)
+- **Phase 10:** Routing and request dispatch — introducing request-based handlers, dynamic endpoints, and request-processing pipeline
+- **Phase 11+:** Polish, utility extraction, and final repository convergence
 
 ## Current Status
 
-The hard protocol and networking concepts are in place. Remaining work is primarily architectural refinement: cleaner server decomposition, improved routing flow, stronger organization, and final alignment with the reference repository structure.
+The server now supports dynamic routing with request-based dispatching. The architecture has evolved from a pure file server into a mini web framework capable of handling both static file serving and dynamic endpoint handlers. The foundation is solid and extensible; remaining work involves matching the final repository structure, adding utility helpers, and final polish.
