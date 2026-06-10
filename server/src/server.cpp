@@ -73,11 +73,57 @@ void Server::handleClient(
         std::cout << header.first << ": " << header.second << std::endl;
     }
 
+    routeRequest(
+        client_socket,
+        request
+    );      
+
+}
+
+void Server::handleStatus(
+    int client_socket
+)
+{
+    Response response;
+
+    response.body = "Server is running";
+
+    response.setHeader(
+        "Content-Type",
+        "text/plain"
+    );
+
+    response.setHeader(
+        "Content-Length",
+        std::to_string(response.body.size())
+    );
+
+    std::string responseText =
+        response.toString();
+
+    send(
+        client_socket,
+        responseText.c_str(),
+        responseText.size(),
+        0
+    );
+}
+
+void Server::routeRequest(
+    int client_socket,
+    const Request& request
+)
+{
+    if (request.path == "/status")
+    {
+        handleStatus(client_socket);
+        return;
+    }
+
     serveFile(
         client_socket,
         request.path
-    );      
-
+    );
 }
 
 void Server::serveFile(

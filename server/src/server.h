@@ -2,6 +2,8 @@
 
 #include <string>
 
+class Request;
+
 class Server
 {
 public:
@@ -16,6 +18,15 @@ private:
     int server_fd;
 
     void handleClient(int client_socket);
+
+    void routeRequest(
+    int client_socket,
+    const Request& request
+    );
+
+    void handleStatus(
+        int client_socket
+    );
 
     void serveFile(
         int client_socket,
