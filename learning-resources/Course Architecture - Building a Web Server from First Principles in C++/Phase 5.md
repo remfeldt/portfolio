@@ -438,11 +438,11 @@ Those are the next architectural leap.
 
 You are done when:
 
-* [ ] CSS loads correctly
-* [ ] DevTools shows correct MIME types
-* [ ] Browser requests multiple assets
-* [ ] curl confirms MIME headers
-* [ ] You understand:
+* [X] CSS loads correctly
+* [X] DevTools shows correct MIME types
+* [X] Browser requests multiple assets
+* [X] curl confirms MIME headers
+* [X] You understand:
 
   * MIME purpose
   * browser asset loading behavior
@@ -480,3 +480,17 @@ And it maps directly toward:
 * `request.h`
 
 in your final repo.
+
+*All is good, tested and it does what its supposed to. Lets move to the next phase*
+
+Excellent.
+You’ve now reached the point where most people stop.
+
+What you currently have is:
+
+a functioning TCP server
+basic HTTP parsing
+static asset serving
+MIME handling
+
+Now we begin the architectural transition.
