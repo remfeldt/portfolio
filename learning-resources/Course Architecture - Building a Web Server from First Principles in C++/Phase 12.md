@@ -704,3 +704,5 @@ You should now have:
 * [X] Browser and curl behavior unchanged
 
 The next phase will be a significant architectural step: **moving route registration out of the `Server` constructor and toward a more reusable routing interface**. This is where the server starts becoming something that an application developer could configure rather than something whose routes are hard-coded into the server implementation.
+
+*Lets move to the next phase*
