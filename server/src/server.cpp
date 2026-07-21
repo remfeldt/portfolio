@@ -8,8 +8,6 @@
 #include "request.h"
 #include "response.h"
 
-Router router;
-
 Server::Server(int port)
 {
     this->port = port;
@@ -119,7 +117,6 @@ void Server::handleClient(
 
     if (bytes_received < 0) {
         perror("recv failed");
-        close(client_socket);
         return;
     }
 

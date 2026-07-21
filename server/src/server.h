@@ -20,6 +20,8 @@ private:
     int port;
     int server_fd;
 
+    Router router;
+
     void handleClient(int client_socket);
 
     void routeRequest(
