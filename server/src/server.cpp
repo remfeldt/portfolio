@@ -12,16 +12,22 @@ Server::Server(int port)
 {
     this->port = port;
     
-    routes["/status"] =
+    
+
+    router.addRoute(
+        "/status",
         [this](int client_socket)
         {
             handleStatus(client_socket);
-        };
-    routes["/hello"] =
+        }
+    );
+    router.addRoute(
+        "/hello",
         [this](int client_socket)
         {
             handleHello(client_socket);
-        };
+        }
+    );
 }
 
 void Server::start()
@@ -111,7 +117,6 @@ void Server::handleClient(
 
     if (bytes_received < 0) {
         perror("recv failed");
-        close(client_socket);
         return;
     }
 
@@ -144,12 +149,12 @@ void Server::routeRequest(
     const Request& request
 )
 {
-    auto route =
-    routes.find(request.path);
+    Router::Handler* route =
+    router.findRoute(request.path);
 
-    if (route != routes.end())
+    if (route != nullptr)
     {
-        route->second(client_socket);
+        (*route)(client_socket);
         return;
     }
 

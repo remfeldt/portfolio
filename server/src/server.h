@@ -1,10 +1,9 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
-#include <functional>
 
 #include "response.h"
+#include "router.h"
 
 class Request;
 
@@ -21,10 +20,7 @@ private:
     int port;
     int server_fd;
 
-    std::unordered_map<
-        std::string,
-        std::function<void(int)>
-    > routes;
+    Router router;
 
     void handleClient(int client_socket);
 
