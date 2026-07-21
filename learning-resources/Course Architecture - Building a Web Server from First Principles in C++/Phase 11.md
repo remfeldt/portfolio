@@ -522,3 +522,5 @@ sendText(...)
 ```
 
 This will dramatically reduce duplication and move us closer to the style found in mature server implementations and the original repository architecture.
+
+*I'm ready for phase 12*
