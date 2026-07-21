@@ -42,26 +42,26 @@ Important folders:
 After Phase 11 completion, the project is around 70% toward the reference end state.
 
 ```txt
-[##############------] 70%
+[###############-----] 75%
 ```
 
 ### Completion Status
 
-Foundation & Networking       ✅ 100%
-HTTP Protocol Basics          ✅ 100%
-Request Parsing               ✅ 100%
-Response Generation           ✅ 100%
-Static File Serving           ✅ 100%
-MIME Handling                 ✅ 100%
-Server Abstraction            ✅ 100%
-Server Decomposition          ✅ 100%
+- Foundation & Networking       ✅ 100%
+- HTTP Protocol Basics          ✅ 100%
+- Request Parsing               ✅ 100%
+- Response Generation           ✅ 100%
+- Static File Serving           ✅ 100%
+- MIME Handling                 ✅ 100%
+- Server Abstraction            ✅ 100%
+- Server Decomposition          ✅ 100%
 
-Routing Layer                 ✅ 100% (Phase 10)
-Request Dispatching           ✅ 100% (Phase 10)
-Route Table Architecture      ✅ 100% (Phase 11)
-Repository Structure Match    ⏳ 60%
-Response Helpers              ⏳ 0% (Phase 12)
-Polish & Refinement           ⏳ 0%
+- Routing Layer                 ✅ 100% (Phase 10)
+- Request Dispatching           ✅ 100% (Phase 10)
+- Route Table Architecture      ✅ 100% (Phase 11)
+- Repository Structure Match    ⏳ 60%
+- Response Helpers              ✅ 100% (Phase 12)
+- Polish & Refinement           ⏳ 0%
 
 ### Phase Summary
 

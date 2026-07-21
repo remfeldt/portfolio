@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <functional>
 
+#include "response.h"
+
 class Request;
 
 class Server
@@ -31,14 +33,6 @@ private:
     const Request& request
     );
 
-    void handleStatus(
-        int client_socket
-    );
-
-    void handleHello(
-        int client_socket
-    );
-
     void serveFile(
         int client_socket,
         const std::string& path
@@ -47,4 +41,32 @@ private:
     std::string getMimeType(
         const std::string& path
     );
+
+    void handleStatus(
+        int client_socket
+    );
+
+    void handleHello(
+        int client_socket
+    );
+
+    void sendResponse(
+        int client_socket,
+        Response& response
+    );
+
+    void sendTextResponse(
+        int client_socket,
+        const std::string& body,
+        const std::string& content_type
+    );
+
+    void sendErrorResponse(
+        int client_socket,
+        int status_code,
+        const std::string& status_text,
+        const std::string& body
+    );
+
+    
 };
